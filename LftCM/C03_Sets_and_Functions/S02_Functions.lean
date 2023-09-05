@@ -4,10 +4,10 @@ import Mathlib.Data.Set.Function
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 -- .. _functions:
--- 
+--
 -- Functions
 -- ---------
--- 
+--
 -- If ``f : α → β`` is a function and  ``p`` is a set of
 -- elements of type ``β``,
 -- the library defines ``preimage f p``, written ``f ⁻¹' p``,
@@ -50,7 +50,7 @@ example : f '' (s ∪ t) = f '' s ∪ f '' t := by
 
 -- Notice also that the ``use`` tactic applies ``rfl``
 -- to close goals when it can.
--- 
+--
 -- Here is another example:
 example : s ⊆ f ⁻¹' (f '' s) := by
   intro x xs
@@ -62,7 +62,7 @@ example : s ⊆ f ⁻¹' (f '' s) := by
 -- use a theorem specifically designed for that purpose.
 -- But knowing that the image is defined in terms
 -- of an existential quantifier is often convenient.
--- 
+--
 -- The following equivalence is a good exercise:
 example : f '' s ⊆ v ↔ s ⊆ f ⁻¹' v := by
   sorry
@@ -78,7 +78,7 @@ example : f '' s ⊆ v ↔ s ⊆ f ⁻¹' v := by
 -- because ``y ∈ f ⁻¹' t`` unfolds to ``f y ∈ t``
 -- whereas working with ``x ∈ f '' s`` requires
 -- decomposing an existential quantifier.
--- 
+--
 -- Here is a long list of set-theoretic identities for
 -- you to enjoy.
 -- You don't have to do all of them at once;
@@ -86,6 +86,8 @@ example : f '' s ⊆ v ↔ s ⊆ f ⁻¹' v := by
 -- and set the rest aside for a rainy day.
 example (h : Injective f) : f ⁻¹' (f '' s) ⊆ s := by
   sorry
+
+
 
 example : f '' (f ⁻¹' u) ⊆ u := by
   sorry
@@ -189,7 +191,7 @@ end
 -- to their full domain,
 -- there are often relativized versions that restrict
 -- the statements to a subset of the domain type.
--- 
+--
 -- Here is are some examples of ``InjOn`` and ``range`` in use:
 section
 
@@ -261,7 +263,7 @@ example : P (Classical.choose h) :=
 -- is some ``x`` satisfying ``P x``.
 -- The theorem ``Classical.choose_spec h`` says that ``Classical.choose h``
 -- meets this specification.
--- 
+--
 -- With these in hand, we can define the inverse function
 -- as follows:
 noncomputable section
@@ -288,7 +290,7 @@ theorem inverse_spec {f : α → β} (y : β) (h : ∃ x, f x = y) : f (inverse 
 -- and, similarly, ``dif_neg h`` rewrites it to ``b`` given ``h : ¬ e``.
 -- The theorem ``inverse_spec`` says that ``inverse f``
 -- meets the first part of this specification.
--- 
+--
 -- Don't worry if you do not fully understand how these work.
 -- The theorem ``inverse_spec`` alone should be enough to show
 -- that ``inverse f`` is a left inverse if and only if ``f`` is injective

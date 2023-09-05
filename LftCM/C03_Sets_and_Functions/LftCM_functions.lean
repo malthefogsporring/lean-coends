@@ -86,19 +86,30 @@ tactic to replace these terms by their definition.-/
 
 /- For example, we can start this proof with `rw [injective_def]`, and later use `rw [id_eval]`. -/
 lemma injective_id : Injective (id : X → X) := by
-  sorry
+  dsimp only [Injective, id] at *
+  intro a b h
+  exact h
 
 /-- A composition of injective functions is injective. -/
 lemma injective_comp (hf : Injective f) (hg : Injective g) : Injective (g ∘ f) := by
-  sorry --exercise
+  dsimp only [Injective] at *
+  intro a b ha
+  have hg' := hg ha
+  have hf' := hf hg'
+  exact hf'
+
 
 /- Exercise-/
 example (f : X → Y) (g : Y → Z) :
   Injective (g ∘ f) → Injective f := by
-  sorry --exercise
-
+  dsimp only [Injective]
+  intro h a b hf
+  have hj : (g ∘ f) a = (g ∘ f) b := by
+    simp only [comp_eval]
+    rw [hf]
 
 /-!
+/- apply_fun g at hf-/
 
 ### Surjective functions
 
