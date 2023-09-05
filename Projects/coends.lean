@@ -45,17 +45,32 @@ def idWedge (x : Wedge F) : WedgeMor x x where
 def compWedge {x y z : Wedge F} (f : WedgeMor x y) (g : WedgeMor y z) : WedgeMor x z where
   mor := f.mor ≫ g.mor
 
-lemma
+
+
+
+lemma idWedge_comp : ∀ {x y : Wedge F} (f : WedgeMor x y), compWedge (idWedge x) f = f := by
+  sorry
+
+lemma comp_idWedge : ∀ {x y : Wedge F} (f : WedgeMor x y), compWedge f (idWedge y) = f := by
+  sorry
+
+lemma compWedge_assoc : ∀ {w x y z : Wedge F} (f : WedgeMor w x) (g : compWedge x y) (h : compWedge y z), compWedge (compWedge f g) h = compWedge f compWedge( g h ) := by
+  sorry
+
 
 instance : Category (Wedge F) where
   Hom := fun x y => WedgeMor x y
   id := fun x => idWedge x
   comp := fun f g => compWedge f g
-  id_comp := _
-  comp_id := _
-  assoc := _
+  id_comp := idWedge_comp
+  comp_id := comp_idWedge
+  assoc := compWedge_assoc
 
 #exit
+
+variable {w x y z: Wedge F}
+variable {f :  WedgeMor x y}
+variable {g : WedgeMor y z}
 
 --def wedgesOb (F : (Cᵒᵖ×C) ⥤ D) : Type max (max u' u) v' := fun c ↦ {f ∈ F.Hom}
 /-def wedges : (J ⥤ C) ⥤ Cᵒᵖ ⥤ Type max u₁ v₃ where
