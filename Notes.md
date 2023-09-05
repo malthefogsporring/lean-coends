@@ -57,3 +57,18 @@
 
   * by refl is stronger than refl -- it can also prove things like a iff a.
   * Two proofs of the same theorem are equal according to LEAN.
+
+## Sets and functions
+
+* Functions are between types (not sets)
+* Ex: **variable (X Y Z : Type)  (a b : X) ( f: X \r Y) (g : Y \r Z)**
+  * Or more info: X : Type [AddMonoid X]
+* Function.Injective f, Function.Surjective f
+* namespace name : Now everything lives under name.?
+* obtain \langle y, hy \rangle:= hg z gives you a y and a proof gy=z (?)
+  * alternative to rcases
+* fun n \mapsto n^2 + 3 (lambda notation)
+* Set is called Type
+* ext tactic reduces X=Y to a\in X \iff a \in Y.
+* S : Set A -- a subset of A. Elements of S are of type A
+* 
