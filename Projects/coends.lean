@@ -45,9 +45,6 @@ def idWedge (x : Wedge F) : WedgeMor x x where
 def compWedge {x y z : Wedge F} (f : WedgeMor x y) (g : WedgeMor y z) : WedgeMor x z where
   mor := f.mor ≫ g.mor
 
-
-
-
 lemma idWedge_comp : ∀ {x y : Wedge F} (f : WedgeMor x y), compWedge (idWedge x) f = f := by
   sorry
 
@@ -56,7 +53,6 @@ lemma comp_idWedge : ∀ {x y : Wedge F} (f : WedgeMor x y), compWedge f (idWedg
 
 lemma compWedge_assoc : ∀ {w x y z : Wedge F} (f : WedgeMor w x) (g : compWedge x y) (h : compWedge y z), compWedge (compWedge f g) h = compWedge f compWedge( g h ) := by
   sorry
-
 
 instance : Category (Wedge F) where
   Hom := fun x y => WedgeMor x y
@@ -71,29 +67,3 @@ instance : Category (Wedge F) where
 variable {w x y z: Wedge F}
 variable {f :  WedgeMor x y}
 variable {g : WedgeMor y z}
-
---def wedgesOb (F : (Cᵒᵖ×C) ⥤ D) : Type max (max u' u) v' := fun c ↦ {f ∈ F.Hom}
-/-def wedges : (J ⥤ C) ⥤ Cᵒᵖ ⥤ Type max u₁ v₃ where
-  obj := Functor.cones
-  map f := whiskerLeft (const J).op (yoneda.map f)-/
-instance Wd : Category ℕ where
-  Hom := fun m n => Inhabited (m ≤ n)
-  id := fun m => Inhabited.mk (by linarith)
-  comp := fun f g => Inhabited.mk (by
-    rcases f
-    rcases g
-    linarith
-  )
-#check Wd
--- Limits.HasLimit F
--- #check Limits.Haslimits.limit F
--- def end : := limit F
-
-/-instance myNatCat : Category ℕ where
-  Hom := fun m n => Inhabited (m ≤ n)
-  id := fun m => Inhabited.mk (by linarith)
-  comp := fun f g => Inhabited.mk (by
-    rcases f
-    rcases g
-    linarith
-  )-/
