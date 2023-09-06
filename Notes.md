@@ -113,5 +113,27 @@
 
 ## Algebraic Hierarchies
 
-* 
+* Extending structures with "uses" is very smart.
 
+
+
+##  Topology
+
+* Use filters instead of epsilon-delta proofs
+* Functions on sets generalise to functions on filters
+  * "f converges wrt G along F" iff f_*F<=G. Tendsto f F G
+* Upshot: this captures all the types of limits (finite, infinite, right, etc.) so need fewer proofs
+* Example: lim_x->2 f(x)=1:
+  * Tendsto f (nhds 2) (nhds 1)
+  * nhds is the neighbourhood filter
+  * atBot=-infty, atTop=+infty
+* Galois connection: f_\*T<=f^\*T
+* You shouldn't do epsilon-delta, but you can
+* "For n large enough, P(n)"... or "for x close enough to x_0, P(x)"...
+  * Notation: \eventually x in F, P x
+  * In filter language, means {x | Px}\in F
+  * tactic: filter_upwards
+* What does continuous mean?
+  * f:X->Y cont at z iff f\_* N\_(x\_0)<= N\_(f(x\_0))
+  * f cont everywhere if f\_* T\_X<= T\_Y, where T\_X is the collection of all neighbourhood filters ("the topology")
+* 

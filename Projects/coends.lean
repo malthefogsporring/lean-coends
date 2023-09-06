@@ -39,28 +39,27 @@ variable {F}
 
 attribute [simp] WedgeMor.morCond
 
-def idWedge (x : Wedge F) : WedgeMor x x where
+@[simp] def idWedge (x : Wedge F) : WedgeMor x x where
   mor := 𝟙 x.pt
 
-def compWedge {x y z : Wedge F} (f : WedgeMor x y) (g : WedgeMor y z) : WedgeMor x z where
+@[simp] def compWedge {x y z : Wedge F} (f : WedgeMor x y) (g : WedgeMor y z) : WedgeMor x z where
   mor := f.mor ≫ g.mor
 
-lemma idWedge_comp : ∀ {x y : Wedge F} (f : WedgeMor x y), compWedge (idWedge x) f = f := by
-  sorry
+/-lemma idWedge_comp : ∀ {x y : Wedge F} (f : WedgeMor x y), compWedge (idWedge x) f = f := by
+  aesop_cat
 
 lemma comp_idWedge : ∀ {x y : Wedge F} (f : WedgeMor x y), compWedge f (idWedge y) = f := by
-  sorry
+  intro x y f
+  rw [compWedge,idWedge]
+  aesop_cat
 
-lemma compWedge_assoc : ∀ {w x y z : Wedge F} (f : WedgeMor w x) (g : compWedge x y) (h : compWedge y z), compWedge (compWedge f g) h = compWedge f compWedge( g h ) := by
-  sorry
+lemma compWedge_assoc : ∀ {w x y z : Wedge F} (f : WedgeMor w x) (g : WedgeMor x y) (h : WedgeMor y z), compWedge (compWedge f g) h = compWedge f (compWedge g h ) := by
+  sorry-/
 
 instance : Category (Wedge F) where
   Hom := fun x y => WedgeMor x y
   id := fun x => idWedge x
   comp := fun f g => compWedge f g
-  id_comp := idWedge_comp
-  comp_id := comp_idWedge
-  assoc := compWedge_assoc
 
 #exit
 
