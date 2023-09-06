@@ -8,8 +8,7 @@ open CategoryTheory
 
 noncomputable section
 
-universe u v
-universe u' v'
+universe v v' u u'
 variable {C:Type u} [Category.{v} C]
 variable {D:Type u'} [Category.{v'} D]
 variable (F : (Cᵒᵖ×C) ⥤ D)
@@ -35,11 +34,13 @@ variable {F}
 
 @[ext] structure WedgeMorphism (x y : Wedge F) where
   Hom : x.pt ⟶ y.pt
-  morCond : ∀ (c : C),
+  wedgeCondition : ∀ (c : C),
     Hom ≫ y.leg c = x.leg c
      := by aesop_cat
 
-attribute [simp] WedgeMorphism.morCond
+/-attribute [simp] Wedge.wedgeCondition
+attribute [simp] Wedge.leg-/
+attribute [simp] WedgeMorphism.wedgeCondition
 
 @[simp] def wedge_id (x : Wedge F) : WedgeMorphism x x where
   Hom := 𝟙 x.pt
@@ -83,25 +84,41 @@ def myEnd [HasTerminal (Wedge F)] := terminal (Wedge F)
 def bar_F_cone_mor_as_wedgeMorphism {c : Cone (bar_fun F)} {d : Cone (bar_fun F)} (f : ConeMorphism c d) : WedgeMorphism (bar_F_cone_as_wedge c) (bar_F_cone_as_wedge d) where
   Hom := f.Hom
 
-def functor_cone_to_bar (F : (Cᵒᵖ×C) ⥤ D) : Functor (Cone (bar_fun F)) (Wedge F) where
+def functor_cone_to_wedge (F : (Cᵒᵖ×C) ⥤ D) : Functor (Cone (bar_fun F)) (Wedge F) where
   obj x := bar_F_cone_as_wedge x
   map f := bar_F_cone_mor_as_wedgeMorphism f
 
 -- wedges of F are cones of F_bar
 
+
 @[simp] def wedge_as_cone ( w : Wedge F) : Cone (bar_fun F) where
   pt := w.pt
   π := {
-    app := fun ⟨(d,d'),f⟩ ↦ (w.leg (Opposite.unop d)) ≫ (F.map (𝟙 d,f))
-    naturality := by sorry
+    app := fun g => (w.leg (Opposite.unop g.1.1)) ≫ (F.map (𝟙 g.1.1,g.2))
+    naturality := by
+      intro ⟨(d,d'),f⟩ ⟨(e,e'),g⟩ ⟨(h,h'),prop⟩
+      dsimp
+      simp
+      dsimp at prop h h'
+      change _ ⟶ _ at f g
+      dsimp at f g
+      have sq1 := w.wedgeCondition h.unop
+      rw [Wedge.leg] at *
+      simp at *
+      have sq2 := congr_arg (fun (j : Opposite.unop e ⟶ e') ↦ F.map (X := (e,Opposite.unop e)) (Y:= (e,e')) (𝟙 e, j)) prop
+      simp at sq2
+      aesop_cat_nonterminal
+
+
   }
 
+-- app := fun ⟨(d,d'),f⟩ => (w.leg (Opposite.unop d)) ≫ ((bar_fun F).map ⟨(𝟙 d,f), by simp⟩ )
 @[simp] def wedgeMorphism_as_coneMorphism {c : Wedge F} {d : Wedge F} (f : WedgeMorphism c d) : ConeMorphism (wedge_as_cone c) (wedge_as_cone d) where
   Hom := f.Hom
 
-@[simp] def functor_bar_to_cone (F : (Cᵒᵖ×C) ⥤ D) : Functor (Cone (bar_fun F)) (Wedge F) where
-  obj x := bar_F_cone_as_wedge x
-  map f := bar_F_cone_mor_as_wedgeMorphism f
+@[simp] def functor_wedge_to_cone (F : (Cᵒᵖ×C) ⥤ D) : Functor (Wedge F) (Cone (bar_fun F)) where
+  obj x := wedge_as_cone x
+  map f := wedgeMorphism_as_coneMorphism f
 
 def limit_cone_as_terminal_wedge ( c : Cone (bar_fun F)) (ic : (IsLimit c)) :  IsTerminal (bar_F_cone_as_wedge c) :=
   IsTerminal.ofUniqueHom (fun w ↦ ⟨ _ , _ ⟩ ) (by sorry)

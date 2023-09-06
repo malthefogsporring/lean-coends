@@ -158,3 +158,14 @@
   * a = _ :=
   * _ <= _  :=
   * _ = b :=
+
+## Category Theory
+
+* Challenge 1: We really need dependent types
+* IsLimit is a **structure**! Everything is a construction! Limits are a *choice* of a limit cone
+  * We can use getLimitCone to get *a* limit cone, but it is better to work with arbitrary limit cones.
+* Tactics
+  * slice_lhs 2 3 -- associativity trick. if you have f >> g >> h >> j, this will create a subgoal of g >> h
+  * reassoc_of% e -- if e is of the form i >> f = i >> g , then can rewrite along e, even if the bracketing is wrong
+  * elementwise -- turns a problem into an elementwise one
+* 
