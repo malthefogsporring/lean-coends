@@ -54,6 +54,10 @@
   * **simp** (simplification)
   * **norm_num** (inequality stuff)
   
+  **refine**
+  
+  * Like exact, but you can do refine ?_ to make subgoals
+  
   ## Notes
   
   * by refl is stronger than refl -- it can also prove things like a iff a.
@@ -136,4 +140,21 @@
 * What does continuous mean?
   * f:X->Y cont at z iff f\_* N\_(x\_0)<= N\_(f(x\_0))
   * f cont everywhere if f\_* T\_X<= T\_Y, where T\_X is the collection of all neighbourhood filters ("the topology")
-* 
+
+
+
+## Combinatorics
+
+* Set \N (sets of natural numbers)
+* FinSet \N (finite sets of natural numbers)
+* Functions: \union, \inter, \empty, \insert, \hassubset, \SDiff
+* s.erase a removes a from s.
+* biUnion (..?)
+* (a : Type) [Fintype a]
+  * Notation for anything to be finite. Then you can check cardinality fx; Fintype.card a
+* Open BigOperators to use sigma + prod notation]
+  * Note: in LEAN, we define product stuff, and use @[to_additive] to generate the additive version
+* calc tactic: a <= _  :=
+  * a = _ :=
+  * _ <= _  :=
+  * _ = b :=
