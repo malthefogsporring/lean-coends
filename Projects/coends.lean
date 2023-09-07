@@ -8,6 +8,7 @@ import Mathlib.CategoryTheory.Products.Basic
 import Mathlib.CategoryTheory.Functor.Basic
 import Mathlib.CategoryTheory.Category.Basic
 import Mathlib.Data.Opposite
+import Mathlib.CategoryTheory.Equivalence
 open CategoryTheory
 
 noncomputable section
@@ -98,19 +99,14 @@ def functor_cone_to_wedge (F : (Cᵒᵖ×C) ⥤ D) : Functor (Cone (bar_fun F)) 
       simp at sq2
       aesop_cat_nonterminal
       have identity_triple_comp : (𝟙 e ≫ 𝟙 e ≫ 𝟙 e = 𝟙 e) := by aesop_cat
-      /-have prod_functoriality_2 : (F.map ((𝟙 e, h.unop) : (e,e.unop) ⟶ (e,d.unop))) ≫ (F.map ((𝟙 e, f): (e,d.unop) ⟶ (e,d'))) ≫ (F.map ((𝟙 e,h'): (e,d') ⟶ (e,e'))) = F.map ((𝟙 e ≫ 𝟙 e ≫ 𝟙 e, (h.unop ≫ (f ≫ h' : d.unop ⟶ e') : e.unop ⟶ e')) : (e,e.unop) ⟶ (e,e')) := by
-        rw [← prod_comp Cᵒᵖ C ((𝟙 e, h.unop) : (e,e.unop) ⟶ (e,d.unop))  ((𝟙 e ≫ 𝟙 e , f ≫ h') : (e,d.unop) ⟶ (e,e'))]
-        rw [← prod_comp Cᵒᵖ C ((𝟙 e, f) : (e,d.unop) ⟶ (e,d'))  ((𝟙 e, h') : (e,d') ⟶ (e,e'))]
-        rw [F.map_comp]
-        rw [F.map_comp]-/
       rw [← identity_triple_comp]
       rw [← prod_comp Cᵒᵖ C ((𝟙 e, h.unop) : (e,e.unop) ⟶ (e,d.unop))  ((𝟙 e ≫ 𝟙 e , f ≫ h') : (e,d.unop) ⟶ (e,e'))]
       rw [← prod_comp Cᵒᵖ C ((𝟙 e, f) : (e,d.unop) ⟶ (e,d'))  ((𝟙 e, h') : (e,d') ⟶ (e,e'))]
       rw [F.map_comp]
       rw [F.map_comp]
-      --rw [← prod_functoriality_2]
-      have sq3 := (reassoc_of% sq1) ((F.map (𝟙 e, f) : (F.obj (e, d.unop) ⟶ F.obj (e, d')) ) ≫ (F.map (𝟙 e, h') : (F.obj (e, d') ⟶ F.obj (e, e'))))
-      rw [sq3]
+      rw [← Category.assoc]
+      rw [sq1]
+      rw [Category.assoc]
       rw [← F.map_comp]
       rw [← F.map_comp]
       rw [← F.map_comp]
@@ -130,7 +126,23 @@ def functor_cone_to_wedge (F : (Cᵒᵖ×C) ⥤ D) : Functor (Cone (bar_fun F)) 
   obj x := wedge_as_cone x
   map f := wedgeMorphism_as_coneMorphism f
 
-def equivelence_Cone(Fbar)_Wd(F) :
+def equivalence_cone_Fbar_WdF : Equivalence (Wedge F) (Cone (bar_fun F)) where
+  functor := functor_wedge_to_cone F
+  inverse := functor_cone_to_wedge F
+  unitIso := {
+    hom := sorry
+    inv := sorry
+    hom_inv_id := sorry
+    inv_hom_id := sorry
+  }
+  counitIso := {
+    hom := sorry
+    inv := sorry
+    hom_inv_id := sorry
+    inv_hom_id := sorry
+  }
+  functor_unitIso_comp := fun
+    | .mk pt leg wedgeCondition => sorry
 
 
 def limit_cone_as_terminal_wedge ( c : Cone (bar_fun F)) (ic : (IsLimit c)) :  IsTerminal (bar_F_cone_as_wedge c) :=
