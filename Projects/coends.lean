@@ -4,6 +4,10 @@ import Mathlib.CategoryTheory.Elements
 import Mathlib.CategoryTheory.Limits.HasLimits
 import Mathlib.CategoryTheory.Limits.Shapes.Terminal
 import Mathlib.CategoryTheory.Opposites
+import Mathlib.CategoryTheory.Products.Basic
+import Mathlib.CategoryTheory.Functor.Basic
+import Mathlib.CategoryTheory.Category.Basic
+import Mathlib.Data.Opposite
 open CategoryTheory
 
 noncomputable section
@@ -20,10 +24,11 @@ def endCone [Limits.HasLimit (bar_fun F)] := Limits.LimitCone (bar_fun F)
 -- ends via wedges
 def twisted_diagonal (F : (Cᵒᵖ×C) ⥤ D) : C → D := fun c ↦ F.obj (Opposite.op c,c)
 
+
 -- c -> F(c,c)
 structure Wedge (F : (Cᵒᵖ×C) ⥤ D) where
   pt : D
-  leg : ∀ c : C, pt ⟶ (twisted_diagonal F) c
+  leg (c:C) : pt ⟶ twisted_diagonal F c
   wedgeCondition : ∀ ⦃c c' : C⦄ (f : c ⟶ c'),
     (leg c ≫ F.map ((𝟙 c).op,f) : pt ⟶ F.obj (Opposite.op c, c'))
      = (leg c' ≫ F.map (f.op, 𝟙 c')  : pt ⟶ F.obj (Opposite.op c, c'))
@@ -38,8 +43,8 @@ variable {F}
     Hom ≫ y.leg c = x.leg c
      := by aesop_cat
 
-/-attribute [simp] Wedge.wedgeCondition
-attribute [simp] Wedge.leg-/
+attribute [simp] Wedge.wedgeCondition
+attribute [simp] Wedge.leg
 attribute [simp] WedgeMorphism.wedgeCondition
 
 @[simp] def wedge_id (x : Wedge F) : WedgeMorphism x x where
@@ -47,18 +52,6 @@ attribute [simp] WedgeMorphism.wedgeCondition
 
 @[simp] def wedge_comp {x y z : Wedge F} (f : WedgeMorphism x y) (g : WedgeMorphism y z) : WedgeMorphism x z where
   Hom := f.Hom ≫ g.Hom
-
-
-/-lemma wedge_id_comp : ∀ {x y : Wedge F} (f : WedgeMorphism x y), wedge_comp (wedge_id x) f = f := by
-  aesop_cat
-
-lemma comp_wedge_id : ∀ {x y : Wedge F} (f : WedgeMorphism x y), wedge_comp f (wedge_id y) = f := by
-  intro x y f
-  rw [wedge_comp,wedge_id]
-  aesop_cat
-
-lemma wedge_comp_assoc : ∀ {w x y z : Wedge F} (f : WedgeMorphism w x) (g : WedgeMorphism x y) (h : WedgeMorphism y z), wedge_comp (wedge_comp f g) h = wedge_comp f (wedge_comp g h ) := by
-  sorry-/
 
 instance : Category (Wedge F) where
   Hom := fun x y => WedgeMorphism x y
@@ -88,17 +81,13 @@ def functor_cone_to_wedge (F : (Cᵒᵖ×C) ⥤ D) : Functor (Cone (bar_fun F)) 
   obj x := bar_F_cone_as_wedge x
   map f := bar_F_cone_mor_as_wedgeMorphism f
 
--- wedges of F are cones of F_bar
-
-
 @[simp] def wedge_as_cone ( w : Wedge F) : Cone (bar_fun F) where
   pt := w.pt
   π := {
     app := fun g => (w.leg (Opposite.unop g.1.1)) ≫ (F.map (𝟙 g.1.1,g.2))
     naturality := by
       intro ⟨(d,d'),f⟩ ⟨(e,e'),g⟩ ⟨(h,h'),prop⟩
-      dsimp
-      simp
+      aesop_cat_nonterminal
       dsimp at prop h h'
       change _ ⟶ _ at f g
       dsimp at f g
@@ -108,13 +97,32 @@ def functor_cone_to_wedge (F : (Cᵒᵖ×C) ⥤ D) : Functor (Cone (bar_fun F)) 
       have sq2 := congr_arg (fun (j : Opposite.unop e ⟶ e') ↦ F.map (X := (e,Opposite.unop e)) (Y:= (e,e')) (𝟙 e, j)) prop
       simp at sq2
       aesop_cat_nonterminal
-
-
+      have identity_triple_comp : (𝟙 e ≫ 𝟙 e ≫ 𝟙 e = 𝟙 e) := by aesop_cat
+      have prod_functoriality_2 : (F.map ((𝟙 e, h.unop) : (e,e.unop) ⟶ (e,d.unop))) ≫ (F.map ((𝟙 e, f): (e,d.unop) ⟶ (e,d'))) ≫ (F.map ((𝟙 e,h'): (e,d') ⟶ (e,e'))) = F.map ((𝟙 e ≫ 𝟙 e ≫ 𝟙 e, (h.unop ≫ (f ≫ h' : d.unop ⟶ e') : e.unop ⟶ e')) : (e,e.unop) ⟶ (e,e')) := by
+        rw [← prod_comp Cᵒᵖ C ((𝟙 e, h.unop) : (e,e.unop) ⟶ (e,d.unop))  ((𝟙 e ≫ 𝟙 e , f ≫ h') : (e,d.unop) ⟶ (e,e'))]
+        rw [← prod_comp Cᵒᵖ C ((𝟙 e, f) : (e,d.unop) ⟶ (e,d'))  ((𝟙 e, h') : (e,d') ⟶ (e,e'))]
+        rw [F.map_comp]
+        rw [F.map_comp]
+      rw [← identity_triple_comp]
+      rw [← prod_functoriality_2]
+      have sq3 := (reassoc_of% sq1) ((F.map (𝟙 e, f) : (F.obj (e, d.unop) ⟶ F.obj (e, d')) ) ≫ (F.map (𝟙 e, h') : (F.obj (e, d') ⟶ F.obj (e, e'))))
+      rw [sq3]
+      rw [← F.map_comp]
+      rw [← F.map_comp]
+      rw [← F.map_comp]
+      aesop_cat
   }
 
--- app := fun ⟨(d,d'),f⟩ => (w.leg (Opposite.unop d)) ≫ ((bar_fun F).map ⟨(𝟙 d,f), by simp⟩ )
 @[simp] def wedgeMorphism_as_coneMorphism {c : Wedge F} {d : Wedge F} (f : WedgeMorphism c d) : ConeMorphism (wedge_as_cone c) (wedge_as_cone d) where
   Hom := f.Hom
+  w := by
+    intro ⟨(d,d'),f⟩
+    aesop_cat_nonterminal
+    rw [Wedge.leg] at *
+    rw [Wedge.leg] at *
+    sorry
+
+
 
 @[simp] def functor_wedge_to_cone (F : (Cᵒᵖ×C) ⥤ D) : Functor (Wedge F) (Cone (bar_fun F)) where
   obj x := wedge_as_cone x
