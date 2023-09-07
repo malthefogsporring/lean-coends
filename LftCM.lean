@@ -30,17 +30,22 @@ import LftCM.C05_Structures_And_Classes.S03_Building_the_Gaussian_Integers
 import LftCM.C07_Algebraic_Hierarchy.S01_Basics
 import LftCM.C07_Algebraic_Hierarchy.S02_Morphisms
 import LftCM.C07_Algebraic_Hierarchy.S03_Subobjects
--- import LftCM.C08_Topology.S01_Filters
--- import LftCM.C08_Topology.S02_Metric_Spaces
--- import LftCM.C08_Topology.S03_Topological_Spaces
--- import LftCM.C09A_Analysis.S01_Elementary_Differential_Calculus
--- import LftCM.C09A_Analysis.S02_Differential_Calculus_in_Normed_Spaces
--- import LftCM.C09A_Analysis.S03_Integration
--- import LftCM.C09A_Analysis.S04_Measure_Theory
--- import LftCM.C09A_Analysis.S05_Elementary_Integration
+import LftCM.C08_Topology.S01_Filters
+import LftCM.C08_Topology.S02_Metric_Spaces
+import LftCM.C08_Topology.S03_Topological_Spaces
+import LftCM.C09A_Analysis.S01_Elementary_Differential_Calculus
+import LftCM.C09A_Analysis.S02_Differential_Calculus_in_Normed_Spaces
+import LftCM.C09A_Analysis.S03_Integration
+import LftCM.C09A_Analysis.S04_Measure_Theory
+import LftCM.C09A_Analysis.S05_Elementary_Integration
 -- import LftCM.C09B_Combinatorics.Combinatorics
--- import LftCM.C10_Category_Theory.CategoryTheory
--- import LftCM.C11_Algebraic_Geometry.Algebraic_Geometry
+import LftCM.C10_Category_Theory.CategoryTheory
+import LftCM.C11_Algebraic_Geometry.API_advice
+import LftCM.C11_Algebraic_Geometry.Algebraic_Geometry
+import LftCM.C11_Algebraic_Geometry.S11A_Algebraic_Geometry_exercises_noSols
+import LftCM.C11_Algebraic_Geometry.S11A_Algebraic_Geometry_exercises_withSols
+import LftCM.C11_Algebraic_Geometry.S11_Algebraic_Geometry
+import LftCM.C11_Algebraic_Geometry.help
 -- import LftCM.C12A_Differential_Geometry.Differential_Geometry
 -- import LftCM.C12B_Number_Theory.S01_Irrational_Roots
 -- import LftCM.C12B_Number_Theory.S02_Induction_and_Recursion
