@@ -43,6 +43,7 @@
   * **simp only [defs] (at *)** expand definitons (optinally everywhere)
   * **rcases h with <h_1,h_2>** if h is of type A and B, make instances of type A and B respectively.
   * **r cases h with (a|b)** same but for or situation???
+  * **decide**: If you have a decidable instance, for example \forall x \in Zmod 4, some equation holds, just run through them all.
   
   ## Tactics
   
