@@ -112,18 +112,17 @@ def functor_cone_to_wedge (F : Cᵒᵖ × C ⥤ D) : Functor (Cone (bar_fun F)) 
   π := {
     app := fun g => (w.leg (unop g.1.1)) ≫ (F.map (𝟙 g.1.1, g.2))
     naturality := by
-      intro ⟨(d,d'),f⟩ ⟨(e,e'),g⟩ ⟨(h,h'),prop⟩
-      aesop_cat_nonterminal
+      intro ⟨(d, d'), f⟩ ⟨(e, e'), g⟩ ⟨(h, h'),prop⟩
+      simp only [Functor.hom_obj, Functor.hom_map] at prop
+      simp only [Functor.hom_obj, Functor.const_obj_obj, bar_fun, Functor.comp_obj,
+        CategoryOfElements.π_obj, prod_Hom, Functor.hom_map, Functor.const_obj_map, op_unop,
+        Category.id_comp, Functor.comp_map, CategoryOfElements.π_map, Category.assoc]
       dsimp at prop h h'
-      change _ ⟶ _ at f g
       dsimp at f g
       have sq1 := w.wedgeCondition h.unop
       rw [Wedge.leg] at *
-      simp at *
-      have sq2 := congr_arg (fun (j : unop e ⟶ e') ↦ F.map (X := (e, unop e)) (Y:= (e,e')) (𝟙 e, j)) prop
-      simp at sq2
-      aesop_cat_nonterminal
-      rw [← show 𝟙 e ≫ 𝟙 e ≫ 𝟙 e = 𝟙 e by aesop_cat]
+      simp only [op_unop, op_id, Quiver.Hom.op_unop] at sq1
+      rw [← prop, ← show 𝟙 e ≫ 𝟙 e ≫ 𝟙 e = 𝟙 e by aesop_cat]
       rw [← prod_comp Cᵒᵖ C (𝟙 e, h.unop) (𝟙 e ≫ 𝟙 e , f ≫ h')]
       rw [← prod_comp Cᵒᵖ C (𝟙 e, f) (𝟙 e, h')]
       rw [F.map_comp,F.map_comp, ← Category.assoc, sq1]
@@ -136,10 +135,10 @@ def functor_cone_to_wedge (F : Cᵒᵖ × C ⥤ D) : Functor (Cone (bar_fun F)) 
     ConeMorphism (wedge_as_cone c) (wedge_as_cone d) where
   Hom := f.hom
   w := by
-    intro ⟨(d, d'), f⟩
-    aesop_cat_nonterminal
-    have wedgeCon := f_1.wedgeCondition d.unop
-    rw [← wedgeCon, Category.assoc]
+    intro ⟨(d, d'), Y⟩
+    simp only [bar_fun, wedge_as_cone, Functor.const_obj_obj, Functor.hom_obj, Functor.comp_obj,
+      CategoryOfElements.π_obj, op_unop]
+    rw [← f.wedgeCondition d.unop, Category.assoc]
 
 -- Functor
 @[simp] def functor_wedge_to_cone (F : Cᵒᵖ × C ⥤ D) : Functor (Wedge F) (Cone (bar_fun F)) where
