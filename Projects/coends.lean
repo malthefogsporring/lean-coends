@@ -15,10 +15,6 @@ variable (F : Cᵒᵖ × C ⥤ D)
 If we think of F as a generalised bimodule, then the end ∫_cF is the 'center' - the subobject of ΠF(c,c) of invariants by the action of F on arrows.
 Simililarly, the coend ∫ᶜF is the 'space of coinvariants' - the quotient of ⨿F(c,c) induced by the same action.
 
-(Co)ends show up everywhere: regular (co)limits, many weighted limits, (pointwise) Kan extensions, ... In this light, (co)ends are an effective organisational tool.
-
-Additionally, they admit a sort of calculus. For instance, we have a form of Fubini's rule which says ∫ᶜ∫ᵉF≅∫ᵉ∫ᶜF≅∫^(c×e) F, for F:Cᵒᵖ × C × Eᵒᵖ × E → D.
-
 We define (co)ends via (co)wedges, which are most convenient to work with, and as special (co)limits, from which we derive the properties of (co)limits.
 ((It would also be nice to define (co)ends via weighted limits))
 We also formalise theorems about (co)ends roughly corresponding to chapters 1-2 of 'Coend Calculus' by Fosco Loregian.
@@ -41,7 +37,7 @@ abbrev TwistedArrow C [Category.{v} C] := (Functor.hom.{v, u} C).Elements
 def endCone [Limits.HasLimit (bar_fun F)] := Limits.LimitCone (bar_fun F)
 
 -- **ends via wedges**
-def twisted_diagonal (F : Cᵒᵖ × C ⥤ D) : C → D := fun c ↦ F.obj (op c, c)
+@[simp] def twisted_diagonal (F : Cᵒᵖ × C ⥤ D) : C → D := fun c ↦ F.obj (op c, c)
 
 structure Wedge (F : Cᵒᵖ × C ⥤ D) where
   pt : D
@@ -92,12 +88,12 @@ def bar_F_cone_as_wedge ( c : Cone (bar_fun F)) : Wedge F where
     aesop_cat
 
 -- Function of morphisms
-def bar_F_cone_mor_as_wedgeMorphism {c : Cone (bar_fun F)} {d : Cone (bar_fun F)}
+@[simp] def bar_F_cone_mor_as_wedgeMorphism {c : Cone (bar_fun F)} {d : Cone (bar_fun F)}
     (f : ConeMorphism c d) : WedgeMorphism (bar_F_cone_as_wedge c) (bar_F_cone_as_wedge d) where
   hom := f.Hom
 
 -- Functor
-def functor_cone_to_wedge (F : Cᵒᵖ × C ⥤ D) : Functor (Cone (bar_fun F)) (Wedge F) where
+@[simp] def functor_cone_to_wedge (F : Cᵒᵖ × C ⥤ D) : Functor (Cone (bar_fun F)) (Wedge F) where
   obj x := bar_F_cone_as_wedge x
   map f := bar_F_cone_mor_as_wedgeMorphism f
 
@@ -141,5 +137,80 @@ def functor_wedge_to_cone (F : Cᵒᵖ × C ⥤ D) : Functor (Wedge F) (Cone (ba
 -- Equivalence of categories of Wd(F) and Cone(F bar)
 def equivalence_cone_Fbar_WdF : Equivalence (Wedge F) (Cone (bar_fun F)) :=
   CategoryTheory.Equivalence.mk (functor_wedge_to_cone F) (functor_cone_to_wedge F)
-    sorry
-    sorry
+    { hom := {
+      app := fun
+        | .mk pt leg wedgeCondition => {
+          hom := by
+            dsimp only [Functor.id_obj, bar_fun, functor_wedge_to_cone, wedge_as_cone, Functor.const_obj_obj,
+              twisted_diagonal, Functor.hom_obj, op_unop, Functor.comp_obj, CategoryOfElements.π_obj,
+              wedgeMorphism_as_coneMorphism, functor_cone_to_wedge, bar_F_cone_as_wedge,
+              bar_F_cone_mor_as_wedgeMorphism, unop_op]
+            exact 𝟙 pt
+          wedgeCondition := by 
+            dsimp only [Functor.id_obj, twisted_diagonal, bar_fun, functor_wedge_to_cone, wedge_as_cone,
+              Functor.const_obj_obj, Functor.hom_obj, op_unop, Functor.comp_obj, CategoryOfElements.π_obj,
+              wedgeMorphism_as_coneMorphism, functor_cone_to_wedge, bar_F_cone_as_wedge,
+              bar_F_cone_mor_as_wedgeMorphism, unop_op, id_eq]
+            simp only [← prod_id] at *
+            simp only [F.map_id] at *
+            aesop_cat
+        }
+      naturality := by 
+        dsimp
+        intro X Y f
+        sorry
+    }
+      inv := {
+        app := fun
+          | .mk pt leg wedgeCondition => {
+            hom := by
+              dsimp only [bar_fun, functor_wedge_to_cone, wedge_as_cone, Functor.const_obj_obj, twisted_diagonal,
+                Functor.hom_obj, op_unop, Functor.comp_obj, CategoryOfElements.π_obj, wedgeMorphism_as_coneMorphism,
+                functor_cone_to_wedge, bar_F_cone_as_wedge, bar_F_cone_mor_as_wedgeMorphism, unop_op, Functor.id_obj]
+              exact 𝟙 pt
+            wedgeCondition := by 
+              dsimp only [bar_fun, functor_wedge_to_cone, wedge_as_cone, Functor.const_obj_obj, twisted_diagonal,
+                Functor.hom_obj, op_unop, Functor.comp_obj, CategoryOfElements.π_obj, wedgeMorphism_as_coneMorphism,
+                functor_cone_to_wedge, bar_F_cone_as_wedge, bar_F_cone_mor_as_wedgeMorphism, unop_op, Functor.id_obj,
+                id_eq]
+              simp [functor_wedge_to_cone] at *
+              simp only [← prod_id] at *
+              simp only [F.map_id] at *
+              aesop_cat
+          }
+        naturality := by
+          dsimp
+          intro X Y f
+          sorry
+      }
+      hom_inv_id := by 
+        dsimp
+        sorry
+      inv_hom_id := by 
+        dsimp
+        sorry
+      }
+    { hom := {
+      app := fun
+        | .mk pt π => {
+          Hom := by
+            dsimp
+            exact 𝟙 pt
+          w := fun
+            | .mk fst snd => by
+              sorry
+        }
+      naturality := by aesop_cat
+    }
+      inv := {
+        app := fun
+        | .mk pt π => {
+          Hom := by
+            dsimp
+            exact 𝟙 pt
+          w := sorry
+        }
+        naturality := by aesop_cat
+      }
+      hom_inv_id := sorry
+      inv_hom_id := sorry }
